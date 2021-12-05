@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla_shop_app/cubit/shop_cubit.dart';
-import 'package:salla_shop_app/cubit/shop_states.dart';
 import 'package:salla_shop_app/modules/search_screen.dart';
 
 import '../Components.dart';

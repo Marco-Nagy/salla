@@ -7,14 +7,13 @@ import 'package:salla_shop_app/data/my_shared.dart';
 abstract class AppState {}
 class InitAppsState extends AppState {}
 class ChangeMoodState extends AppState{}
-//class GetSearchNewsState extends AppState{}
+class GetSearchNewsState extends AppState{}
+
+
+
+
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(InitAppsState());
-
-
-
-
-
   static AppCubit get(context) => BlocProvider.of(context);
   ThemeMode themeMode =ThemeMode.light;
   bool isDark = false;
@@ -26,7 +25,7 @@ class AppCubit extends Cubit<AppState> {
   void changeAppMood() {
     isDark = !isDark;
     themeMode =(isDark)? ThemeMode.dark: ThemeMode.light;
-    MyShared.saveBoolean("isDark", isDark);
+    MyShared.saveData('isDark',  isDark);
     emit(ChangeMoodState());
   }
 

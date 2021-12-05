@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/modules/authentecation/login_screen.dart';
+import 'package:salla_shop_app/modules/shop_layout.dart';
+
+import '../../Components.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -13,6 +17,7 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+
 
   @override
   void initState() {
@@ -36,11 +41,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
           onLoaded: (composition) {
             _controller
               ..duration = composition.duration
-              ..forward().whenComplete(() => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  ));
+              ..forward().whenComplete(() =>
+                  navigate()
+                  //navigateTo(context, LoginScreen())
+                  );
           },
         ));
+  }
+
+  void navigate() {
+
+    if (MyShared.getData('token') == null) {
+      navigateTo(context, LoginScreen());
+    } else {
+      print('token >> '+MyShared.getData('token').toString());
+      navigateTo(context, ShopLayout());
+    }
   }
 }

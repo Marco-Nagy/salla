@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salla_shop_app/cubit/login_cubit.dart';
+import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/modules/authentecation/register_screen.dart';
 import '../../Components.dart';
 import '../shop_layout.dart';
@@ -26,28 +27,15 @@ class LoginScreen extends StatelessWidget {
             if (state.loginResponse.status == true) {
               print(state.loginResponse.message);
               print(state.loginResponse.data!.token);
+              MyShared.saveData( 'token',  state.loginResponse.data!.token.toString()).then((value) {
+                print(value);
+                navigateTo(context, ShopLayout());
+              });
               navigateTo(context, ShopLayout());
-              Fluttertoast.showToast(
-                  msg: state.loginResponse.message.toString(),
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-              );
-
+              showToast(message: state.loginResponse.message.toString());
             } else {
               print(state.loginResponse.message);
-              Fluttertoast.showToast(
-                  msg:  state.loginResponse.message.toString(),
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.black,
-                  fontSize: 16.0
-              );
+              showToast(message: state.loginResponse.message.toString());
 
             }
           }

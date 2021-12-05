@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 Widget defaultButton({
   double width = double.infinity,
   Color background = Colors.blue,
   double radius = 30,
   required String text,
-  Function()? function,}) =>
+  Function()? function,
+}) =>
     Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
@@ -26,33 +28,48 @@ Widget defaultButton({
       ),
     );
 
-Widget defaultTextField({
-  required TextEditingController controller,
-  required TextInputType type,
-  TextInputAction inputAction = TextInputAction.next,
-  required FormFieldValidator validator,
-  required String label,
-  required IconData prefixIcon,
-  Widget? suffixIcon ,
-  bool obscureText = false
-}) =>
+Widget defaultTextField(
+        {required TextEditingController controller,
+        required TextInputType type,
+        TextInputAction inputAction = TextInputAction.next,
+        required FormFieldValidator validator,
+        required String label,
+        required IconData prefixIcon,
+        Widget? suffixIcon,
+        bool obscureText = false}) =>
     TextFormField(
       controller: controller,
       obscureText: obscureText,
       keyboardType: type,
-      textInputAction:inputAction ,
+      textInputAction: inputAction,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50),
         ),
-        prefixIcon: Icon(prefixIcon,
+        prefixIcon: Icon(
+          prefixIcon,
         ),
         suffixIcon: suffixIcon,
       ),
       validator: validator,
     );
+
 void navigateTo(context, widget) => Navigator.push(
-  context,
-  MaterialPageRoute(builder: (BuildContext context) => widget),
-);
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => widget),
+    );
+
+void showToast({
+  required String message,
+
+}) =>
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 5,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:salla_shop_app/data/my_shared.dart';
+import 'package:salla_shop_app/modules/authentecation/login_screen.dart';
 import 'package:salla_shop_app/modules/shop_layout.dart';
 
 import '../Components.dart';
@@ -83,7 +85,11 @@ class SettingsScreen extends StatelessWidget {
               ),
               defaultButton(
                 text: "LOGOUT",
-                function: () {},
+                function: () {
+                  MyShared.clearData('token').then((value) =>
+                  navigateTo(context, LoginScreen())
+                  );
+                },
               ),
             ],
           ),
