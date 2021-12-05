@@ -4,6 +4,7 @@ import 'package:salla_shop_app/data/dio_helper.dart';
 import 'package:salla_shop_app/data/end_points.dart';
 import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/models/category_response.dart';
+import 'package:salla_shop_app/models/favorite_change_response.dart';
 import 'package:salla_shop_app/models/home_response.dart';
 import 'package:salla_shop_app/modules/categories_screen.dart';
 import 'package:salla_shop_app/modules/favorites_screen.dart';
@@ -21,11 +22,22 @@ class ShopLoadingHomeDataState extends ShopStates {}
 class ShopSuccessHomeDataState extends ShopStates {}
 
 class ShopErrorHomeDataState extends ShopStates {}
+
 class ShopLoadingHomeCategoriesState extends ShopStates {}
 
 class ShopSuccessHomeCategoriesState extends ShopStates {}
 
 class ShopErrorHomeCategoriesState extends ShopStates {}
+
+class ShopChangeFavoritesState extends ShopStates {}
+
+class ShopSuccessChangeFavoritesState extends ShopStates {
+  FavoriteChangeResponse favoriteChangeResponse;
+
+  ShopSuccessChangeFavoritesState(this.favoriteChangeResponse);
+}
+
+class ShopErrorChangeFavoritesState extends ShopStates {}
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit(ShopStates initialState) : super(initialState);
@@ -59,9 +71,11 @@ class ShopCubit extends Cubit<ShopStates> {
     SettingsScreen(),
   ];
 
-
   String token = MyShared.getData('token');
-  HomeResponse? homeResponse ;
+  HomeResponse? homeResponse;
+
+  Map<int?, bool?>? favorites = {};
+
   void getHomeData() {
     emit(ShopLoadingHomeDataState());
     DioHelper.getData(
@@ -70,15 +84,21 @@ class ShopCubit extends Cubit<ShopStates> {
     ).then((value) {
       homeResponse = HomeResponse.fromJson(value.data);
       print(value);
-      //print(homeResponse!.status.toString());
-      // print(homeResponse!.data!.products![0].image.toString());
+      homeResponse!.data!.products!.forEach((element) {
+        favorites!.addAll({
+          element.id: element.inFavorites,
+        });
+      });
+      print(favorites.toString());
       emit(ShopSuccessHomeDataState());
     }).catchError((onError) {
       print(onError.toString());
       emit(ShopErrorHomeDataState());
     });
   }
+
   CategoryResponse? categoriesResponse;
+
   void getCategoriesData() {
     emit(ShopLoadingHomeCategoriesState());
     DioHelper.getData(
@@ -95,6 +115,26 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorHomeCategoriesState());
     });
   }
-
-
+  late FavoriteChangeResponse favoriteChangeResponse;
+  void changeFavorites(int productId) {
+    favorites![productId] = !favorites![productId]!;
+    emit(ShopChangeFavoritesState());
+    DioHelper.postData(
+      endpoint: FAVORITES,
+      body: {
+        'product_id': productId,
+      },
+      token: token,
+    ).then((value) {
+      favoriteChangeResponse= FavoriteChangeResponse.fromJson(value.data);
+      print(value);
+      if(!favoriteChangeResponse.status!){
+        favorites![productId] = !favorites![productId]!;
+      }
+      emit(ShopSuccessChangeFavoritesState(favoriteChangeResponse));
+    }).catchError((onError) {
+      favorites![productId] = !favorites![productId]!;
+      emit(ShopErrorChangeFavoritesState());
+    });
+  }
 }

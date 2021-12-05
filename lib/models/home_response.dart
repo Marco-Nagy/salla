@@ -101,9 +101,9 @@ class HomeData {
 
 class Products {
   Products({
-      int? id, 
-      int? price, 
-      int? oldPrice, 
+      int? id,
+      dynamic? price,
+      dynamic? oldPrice,
       int? discount, 
       String? image, 
       String? name, 
@@ -136,9 +136,9 @@ class Products {
     _inCart = json['in_cart'];
   }
   int? _id;
-  int? _price;
-  int? _oldPrice;
-  int? _discount;
+  dynamic? _price;
+  dynamic? _oldPrice;
+  dynamic? _discount;
   String? _image;
   String? _name;
   String? _description;
@@ -147,8 +147,8 @@ class Products {
   bool? _inCart;
 
   int? get id => _id;
-  int? get price => _price;
-  int? get oldPrice => _oldPrice;
+  dynamic? get price => _price;
+  dynamic? get oldPrice => _oldPrice;
   int? get discount => _discount;
   String? get image => _image;
   String? get name => _name;

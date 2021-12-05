@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salla_shop_app/Components.dart';
 import 'package:salla_shop_app/cubit/shop_cubit.dart';
 import 'package:salla_shop_app/models/category_response.dart';
 import 'package:salla_shop_app/models/home_response.dart';
@@ -16,18 +17,27 @@ class HomeScreen extends StatelessWidget {
     ShopCubit.get(context).getCategoriesData();
 
     return BlocConsumer<ShopCubit, ShopStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is ShopSuccessChangeFavoritesState){
+          if(!state.favoriteChangeResponse.status!){
+            showToast(message: 'Error ==>> '+state.favoriteChangeResponse.message.toString());
+          }else{
+            showToast(message: state.favoriteChangeResponse.message.toString());
+
+          }
+        }
+      },
       builder: (context, state) {
         return ConditionalBuilder(
           condition: ShopCubit.get(context).homeResponse != null && ShopCubit.get(context).categoriesResponse!=null,
-          builder: (context) => productsBuilder(ShopCubit.get(context).homeResponse!,ShopCubit.get(context).categoriesResponse!),
+          builder: (context) => productsBuilder(ShopCubit.get(context).homeResponse!,ShopCubit.get(context).categoriesResponse!,context),
           fallback: (context) => Center(child: CircularProgressIndicator()),
         );
       },
     );
   }
 
-  Widget productsBuilder(HomeResponse homeResponse,CategoryResponse categoriesResponse) =>
+  Widget productsBuilder(HomeResponse homeResponse,CategoryResponse categoriesResponse,context) =>
       SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
@@ -69,7 +79,7 @@ class HomeScreen extends StatelessWidget {
             ),
             Container(
               color: Colors.grey.shade400,
-              height: 100,
+              height: 150,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) =>
@@ -99,14 +109,14 @@ class HomeScreen extends StatelessWidget {
                 children: List.generate(
                     homeResponse.data!.products!.length,
                         (index) =>
-                        buildGridProduct(homeResponse.data!.products![index])),
+                        buildGridProduct(homeResponse.data!.products![index],context)),
               ),
             ),
           ],
         ),
       );
 
-  Widget buildGridProduct(Products products) =>
+  Widget buildGridProduct(Products products,context) =>
       Container(
         color: Colors.white,
         margin: EdgeInsets.all(3),
@@ -151,9 +161,7 @@ class HomeScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.start,
             ),
-            SizedBox(
-              height: 5,
-            ),
+            Spacer(),
             Row(
               children: [
                 Text(
@@ -187,10 +195,17 @@ class HomeScreen extends StatelessWidget {
                   ),
                 Spacer(),
                 IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.favorite,
-                      color: Colors.grey,
+                    onPressed: () {
+                      ShopCubit.get(context).changeFavorites(products.id!);
+                    },
+                    icon: CircleAvatar(
+                      backgroundColor: ShopCubit.get(context).favorites![products.id!]! ? Colors.blue : Colors.grey,
+                      radius: 18,
+                      child: Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                        size: 15 ,
+                      ),
                     ))
               ],
             ),
@@ -205,12 +220,12 @@ class HomeScreen extends StatelessWidget {
           Image(
             image: NetworkImage(categoryItem.image!,
             ),
-            width: 100,
-            height: 100,
+            width: 150,
+            height: 150,
             fit: BoxFit.fill,
           ),
             Container(
-              width: 100,
+              width: 150,
               padding: EdgeInsets.symmetric(horizontal: 5),
               color: Colors.black,
               child: Text(categoryItem.name!,
