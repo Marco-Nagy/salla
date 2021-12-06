@@ -1,7 +1,3 @@
-/// status : true
-/// message : "تمت الإضافة بنجاح"
-/// data : {"id":36084,"product":{"id":52,"price":25000,"old_price":25000,"discount":0,"image":"https://student.valuxapps.com/storage/uploads/products/1615440322npwmU.71DVgBTdyLL._SL1500_.jpg"}}
-
 class FavoriteChangeResponse {
   FavoriteChangeResponse({
       bool? status, 
@@ -37,9 +33,6 @@ class FavoriteChangeResponse {
 
 }
 
-/// id : 36084
-/// product : {"id":52,"price":25000,"old_price":25000,"discount":0,"image":"https://student.valuxapps.com/storage/uploads/products/1615440322npwmU.71DVgBTdyLL._SL1500_.jpg"}
-
 class FavoritesData {
   FavoritesData({
       int? id,
@@ -69,24 +62,23 @@ class FavoritesData {
 
 }
 
-/// id : 52
-/// price : 25000
-/// old_price : 25000
-/// discount : 0
-/// image : "https://student.valuxapps.com/storage/uploads/products/1615440322npwmU.71DVgBTdyLL._SL1500_.jpg"
-
 class Product {
   Product({
       int? id,
-      int? price,
-      int? oldPrice,
+      dynamic price,
+      dynamic oldPrice,
       int? discount,
-      String? image,}){
+      String? image,
+      String? name,
+      String? description,
+  }){
     _id = id;
     _price = price;
     _oldPrice = oldPrice;
     _discount = discount;
     _image = image;
+    _name =name;
+    _description =description;
 }
 
   Product.fromJson(dynamic json) {
@@ -95,18 +87,24 @@ class Product {
     _oldPrice = json['old_price'];
     _discount = json['discount'];
     _image = json['image'];
+    _name = json['name'];
+    _description = json['description'];
   }
   int? _id;
-  dynamic? _price;
-  dynamic? _oldPrice;
+  dynamic _price;
+  dynamic _oldPrice;
   int? _discount;
   String? _image;
+  String? _name;
+  String? _description;
 
   int? get id => _id;
-  dynamic? get price => _price;
-  dynamic? get oldPrice => _oldPrice;
+  dynamic get price => _price;
+  dynamic get oldPrice => _oldPrice;
   int? get discount => _discount;
   String? get image => _image;
+  String? get name=>_name;
+  String? get description=>_description;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

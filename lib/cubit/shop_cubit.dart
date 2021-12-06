@@ -5,6 +5,7 @@ import 'package:salla_shop_app/data/end_points.dart';
 import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/models/category_response.dart';
 import 'package:salla_shop_app/models/favorite_change_response.dart';
+import 'package:salla_shop_app/models/favorite_get_response.dart';
 import 'package:salla_shop_app/models/home_response.dart';
 import 'package:salla_shop_app/modules/categories_screen.dart';
 import 'package:salla_shop_app/modules/favorites_screen.dart';
@@ -38,6 +39,11 @@ class ShopSuccessChangeFavoritesState extends ShopStates {
 }
 
 class ShopErrorChangeFavoritesState extends ShopStates {}
+
+class ShopSuccessGetFavoritesState extends ShopStates {}
+
+class ShopErrorGetFavoritesState extends ShopStates {}
+class ShopLoadingGetFavoritesState extends ShopStates {}
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit(ShopStates initialState) : super(initialState);
@@ -74,7 +80,7 @@ class ShopCubit extends Cubit<ShopStates> {
   String token = MyShared.getData('token');
   HomeResponse? homeResponse;
 
-  Map<int?, bool?>? favorites = {};
+  Map<int?, bool?> ? favorites = {} ;
 
   void getHomeData() {
     emit(ShopLoadingHomeDataState());
@@ -97,7 +103,7 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  CategoryResponse? categoriesResponse;
+  late CategoryResponse? categoriesResponse;
 
   void getCategoriesData() {
     emit(ShopLoadingHomeCategoriesState());
@@ -105,7 +111,6 @@ class ShopCubit extends Cubit<ShopStates> {
       endPoint: CATEGORIES,
     ).then((value) {
       categoriesResponse = CategoryResponse.fromJson(value.data);
-
       print(value);
       //print(homeResponse!.status.toString());
       // print(homeResponse!.data!.products![0].image.toString());
@@ -115,7 +120,9 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorHomeCategoriesState());
     });
   }
+
   late FavoriteChangeResponse favoriteChangeResponse;
+
   void changeFavorites(int productId) {
     favorites![productId] = !favorites![productId]!;
     emit(ShopChangeFavoritesState());
@@ -126,15 +133,33 @@ class ShopCubit extends Cubit<ShopStates> {
       },
       token: token,
     ).then((value) {
-      favoriteChangeResponse= FavoriteChangeResponse.fromJson(value.data);
+      favoriteChangeResponse = FavoriteChangeResponse.fromJson(value.data);
       print(value);
-      if(!favoriteChangeResponse.status!){
+      if (!favoriteChangeResponse.status!) {
         favorites![productId] = !favorites![productId]!;
+      }else{
+        getFavorites();
       }
       emit(ShopSuccessChangeFavoritesState(favoriteChangeResponse));
     }).catchError((onError) {
       favorites![productId] = !favorites![productId]!;
       emit(ShopErrorChangeFavoritesState());
+    });
+  }
+
+  FavoriteGetResponse? favoritesGetResponse;
+
+  void getFavorites() {
+    emit(ShopLoadingGetFavoritesState());
+    DioHelper.getData(
+      endPoint: FAVORITES,
+      token: token,
+    ).then((value) {
+      favoritesGetResponse = FavoriteGetResponse.fromJson(value.data);
+      print(value.data!);
+      emit(ShopSuccessGetFavoritesState());
+    }).catchError((onError) {
+      emit(ShopErrorGetFavoritesState());
     });
   }
 }
