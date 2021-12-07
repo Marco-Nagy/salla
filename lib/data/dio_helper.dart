@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:salla_shop_app/data/end_points.dart';
 
 class DioHelper {
   static late Dio dio;
@@ -40,7 +39,7 @@ class DioHelper {
       'Authorization': token
     } ;
     var response = await dio.post(endpoint,data: body);
-    postResponse = response.data['message'];
+   //postResponse = response.data['message'];
     return response;
   }
 

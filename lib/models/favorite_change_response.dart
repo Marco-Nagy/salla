@@ -1,24 +1,28 @@
 class FavoriteChangeResponse {
   FavoriteChangeResponse({
-      bool? status, 
-      String? message, 
-      FavoritesData? data,}){
+    bool? status,
+    String? message,
+    FavoritesData? data,
+  }) {
     _status = status;
     _message = message;
     _data = data;
-}
+  }
 
   FavoriteChangeResponse.fromJson(dynamic json) {
     _status = json['status'];
     _message = json['message'];
     _data = json['data'] != null ? FavoritesData.fromJson(json['data']) : null;
   }
+
   bool? _status;
   String? _message;
   FavoritesData? _data;
 
   bool? get status => _status;
+
   String? get message => _message;
+
   FavoritesData? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -30,25 +34,28 @@ class FavoriteChangeResponse {
     }
     return map;
   }
-
 }
 
 class FavoritesData {
   FavoritesData({
-      int? id,
-      Product? product,}){
+    int? id,
+    Product? product,
+  }) {
     _id = id;
     _product = product;
-}
+  }
 
   FavoritesData.fromJson(dynamic json) {
     _id = json['id'];
-    _product = json['product'] != null ? Product.fromJson(json['product']) : null;
+    _product =
+        json['product'] != null ? Product.fromJson(json['product']) : null;
   }
+
   int? _id;
   Product? _product;
 
   int? get id => _id;
+
   Product? get product => _product;
 
   Map<String, dynamic> toJson() {
@@ -59,27 +66,26 @@ class FavoritesData {
     }
     return map;
   }
-
 }
 
 class Product {
   Product({
-      int? id,
-      dynamic price,
-      dynamic oldPrice,
-      int? discount,
-      String? image,
-      String? name,
-      String? description,
-  }){
+    int? id,
+    dynamic price,
+    dynamic oldPrice,
+    int? discount,
+    String? image,
+    String? name,
+    String? description,
+  }) {
     _id = id;
     _price = price;
     _oldPrice = oldPrice;
     _discount = discount;
     _image = image;
-    _name =name;
-    _description =description;
-}
+    _name = name;
+    _description = description;
+  }
 
   Product.fromJson(dynamic json) {
     _id = json['id'];
@@ -90,6 +96,7 @@ class Product {
     _name = json['name'];
     _description = json['description'];
   }
+
   int? _id;
   dynamic _price;
   dynamic _oldPrice;
@@ -99,12 +106,18 @@ class Product {
   String? _description;
 
   int? get id => _id;
+
   dynamic get price => _price;
+
   dynamic get oldPrice => _oldPrice;
+
   int? get discount => _discount;
+
   String? get image => _image;
-  String? get name=>_name;
-  String? get description=>_description;
+
+  String? get name => _name;
+
+  String? get description => _description;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -115,5 +128,4 @@ class Product {
     map['image'] = _image;
     return map;
   }
-
 }

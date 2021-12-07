@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:salla_shop_app/cubit/register_cubit.dart';
 import 'package:salla_shop_app/cubit/shop_cubit.dart';
 import 'package:salla_shop_app/data/dio_helper.dart';
 import 'package:salla_shop_app/data/my_shared.dart';
@@ -29,10 +30,13 @@ class MyApp extends StatelessWidget {
           create: (context) => AppCubit(),
         ),
         BlocProvider(
-          create: (context) => ShopCubit(ShopInitialState()),
+          create: (context) => ShopCubit(ShopInitialState())..getUserData(),
         ),
         BlocProvider(
           create: (context) => LoginCubit(),
+        ),
+        BlocProvider(
+          create: (context) => RegisterCubit(),
         ),
       ],
       child: BlocConsumer<AppCubit, AppState>(

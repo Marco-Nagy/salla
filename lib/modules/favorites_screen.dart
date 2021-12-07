@@ -11,7 +11,7 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShopCubit.get(context).getFavorites();
-    var cubit =ShopCubit.get(context).favoritesGetResponse!.data!.data!;
+    var cubit = ShopCubit.get(context).favoritesGetResponse!.data!.data!;
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -19,13 +19,14 @@ class FavoritesScreen extends StatelessWidget {
           condition: state is! ShopLoadingGetFavoritesState,
           builder: (context) => ListView.separated(
             itemBuilder: (context, index) =>
-                buildFavoriteProduct(cubit[index],context),
+                buildFavoriteProduct(cubit[index], context),
             separatorBuilder: (context, index) => Divider(
               color: Colors.white,
               thickness: 0.3,
               height: 5,
             ),
-            itemCount: ShopCubit.get(context).favoritesGetResponse!.data!.data!.length,
+            itemCount:
+                ShopCubit.get(context).favoritesGetResponse!.data!.data!.length,
           ),
           fallback: (context) => Center(child: CircularProgressIndicator()),
         );
@@ -33,8 +34,7 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
-  Widget buildFavoriteProduct(FavoriteData favoriteData, context) =>
-      Padding(
+  Widget buildFavoriteProduct(FavoriteData favoriteData, context) => Padding(
         padding: const EdgeInsets.all(15.0),
         child: Container(
           height: 150,
@@ -49,7 +49,7 @@ class FavoritesScreen extends StatelessWidget {
                   children: [
                     Image(
                       image: NetworkImage(
-                        favoriteData.product!.image! ,
+                        favoriteData.product!.image!,
                       ),
                       width: 120,
                       height: 120,
@@ -108,7 +108,6 @@ class FavoritesScreen extends StatelessWidget {
                         ),
                         if (favoriteData.product!.discount! != 0)
                           Text(
-
                             favoriteData.product!.oldPrice!.toString(),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -128,7 +127,8 @@ class FavoritesScreen extends StatelessWidget {
                                   .changeFavorites(favoriteData.product!.id!);
                             },
                             icon: CircleAvatar(
-                              backgroundColor: ShopCubit.get(context).favorites![favoriteData.product!.id]!
+                              backgroundColor: ShopCubit.get(context)
+                                      .favorites![favoriteData.product!.id]!
                                   ? Colors.blue
                                   : Colors.grey,
                               radius: 18,

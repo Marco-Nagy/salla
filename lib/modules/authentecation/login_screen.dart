@@ -2,13 +2,11 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salla_shop_app/cubit/login_cubit.dart';
 import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/modules/authentecation/register_screen.dart';
 import '../../Components.dart';
 import '../shop_layout.dart';
-
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -16,18 +14,19 @@ class LoginScreen extends StatelessWidget {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>LoginCubit(),
-      child: BlocConsumer<LoginCubit,LoginStates>(
-        listener: ( context, state) {
-          if(state is LoginSuccessState) {
+      create: (BuildContext context) => LoginCubit(),
+      child: BlocConsumer<LoginCubit, LoginStates>(
+        listener: (context, state) {
+          if (state is LoginSuccessState) {
             if (state.loginResponse.status == true) {
               print(state.loginResponse.message);
               print(state.loginResponse.data!.token);
-              MyShared.saveData( 'token',  state.loginResponse.data!.token.toString()).then((value) {
+              MyShared.saveData(
+                      'token', state.loginResponse.data!.token.toString())
+                  .then((value) {
                 print(value);
                 navigateTo(context, ShopLayout());
               });
@@ -36,11 +35,10 @@ class LoginScreen extends StatelessWidget {
             } else {
               print(state.loginResponse.message);
               showToast(message: state.loginResponse.message.toString());
-
             }
           }
         },
-        builder: ( context, state) {
+        builder: (context, state) {
           return Scaffold(
             body: SafeArea(
               child: Container(
@@ -102,24 +100,20 @@ class LoginScreen extends StatelessWidget {
                         height: 30,
                       ),
                       ConditionalBuilder(
-                        condition: state is ! LoginLoadingState,
-                        fallback: (BuildContext context) =>Center(child: CircularProgressIndicator()),
-                        builder: (BuildContext context) =>defaultButton(
+                        condition: state is! LoginLoadingState,
+                        fallback: (BuildContext context) =>
+                            Center(child: CircularProgressIndicator()),
+                        builder: (BuildContext context) => defaultButton(
                             function: () {
                               if (formKye.currentState!.validate()) {
-                                  LoginCubit.get(context).userLogin(
+                                LoginCubit.get(context).userLogin(
                                   email: emailController.text,
                                   password: passwordController.text,
                                 );
                                 print(emailController.text);
                                 print(passwordController.text);
-                                //navigateTo(context, ShopLayout());
-
 
                               }
-
-
-
                             },
                             text: "login"),
                       ),
@@ -139,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                           Container(
                             child: InkWell(
                               onTap: () {
-                                navigateTo(context, Register());
+                                navigateTo(context, RegisterScreen());
                               },
                               child: Text("Register",
                                   style: TextStyle(
@@ -157,7 +151,6 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         },
-
       ),
     );
   }
@@ -170,8 +163,8 @@ class LoginScreen extends StatelessWidget {
       return " password must be  more 8 characters ";
     }
     bool passwordValid =
-    RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-        .hasMatch(value);
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+            .hasMatch(value);
     if (!passwordValid) {
       return "password not valid";
     }
@@ -183,13 +176,11 @@ class LoginScreen extends StatelessWidget {
       return "please Enter Email";
     }
     bool emailValid = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value);
     if (!emailValid) {
       return "email not valid";
     }
     return null;
   }
-
 }
-

@@ -7,6 +7,7 @@ import 'package:salla_shop_app/models/category_response.dart';
 import 'package:salla_shop_app/models/favorite_change_response.dart';
 import 'package:salla_shop_app/models/favorite_get_response.dart';
 import 'package:salla_shop_app/models/home_response.dart';
+import 'package:salla_shop_app/models/login_response.dart';
 import 'package:salla_shop_app/modules/categories_screen.dart';
 import 'package:salla_shop_app/modules/favorites_screen.dart';
 import 'package:salla_shop_app/modules/home_screen.dart';
@@ -43,7 +44,18 @@ class ShopErrorChangeFavoritesState extends ShopStates {}
 class ShopSuccessGetFavoritesState extends ShopStates {}
 
 class ShopErrorGetFavoritesState extends ShopStates {}
+
 class ShopLoadingGetFavoritesState extends ShopStates {}
+
+class ShopSuccessGetProfileState extends ShopStates {
+  LoginResponse userResponse;
+
+  ShopSuccessGetProfileState(this.userResponse);
+}
+
+class ShopErrorGetProfileState extends ShopStates {}
+
+class ShopLoadingGetProfileState extends ShopStates {}
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit(ShopStates initialState) : super(initialState);
@@ -80,7 +92,7 @@ class ShopCubit extends Cubit<ShopStates> {
   String token = MyShared.getData('token');
   HomeResponse? homeResponse;
 
-  Map<int?, bool?> ? favorites = {} ;
+  Map<int?, bool?>? favorites = {};
 
   void getHomeData() {
     emit(ShopLoadingHomeDataState());
@@ -137,7 +149,7 @@ class ShopCubit extends Cubit<ShopStates> {
       print(value);
       if (!favoriteChangeResponse.status!) {
         favorites![productId] = !favorites![productId]!;
-      }else{
+      } else {
         getFavorites();
       }
       emit(ShopSuccessChangeFavoritesState(favoriteChangeResponse));
@@ -160,6 +172,22 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopSuccessGetFavoritesState());
     }).catchError((onError) {
       emit(ShopErrorGetFavoritesState());
+    });
+  }
+
+  LoginResponse? userResponse;
+
+  void getUserData() {
+    emit(ShopLoadingGetProfileState());
+    DioHelper.getData(
+      endPoint: PROFILE,
+      token: token,
+    ).then((value) {
+      userResponse = LoginResponse.fromJson(value.data);
+      print(value.data!);
+      emit(ShopSuccessGetProfileState(userResponse!));
+    }).catchError((onError) {
+      emit(ShopErrorGetProfileState());
     });
   }
 }
