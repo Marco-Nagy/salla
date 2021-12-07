@@ -57,15 +57,15 @@ class RegisterCubit extends Cubit<RegisterStates> {
     });
   }
 
-  IconData suffix = Icons.visibility_outlined;
+  IconData suffix = Icons.visibility_off_outlined;
 
   bool passwordVisible = true;
 
   void changeRegisterPasswordVisibility() {
     passwordVisible = !passwordVisible;
     suffix = passwordVisible
-        ? Icons.visibility_outlined
-        : Icons.visibility_off_outlined;
+        ? Icons.visibility_off_outlined
+        :Icons.visibility_outlined ;
     emit(RegisterPasswordVisibilityState());
   }
 }
