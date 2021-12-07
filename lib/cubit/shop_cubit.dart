@@ -57,6 +57,16 @@ class ShopErrorGetProfileState extends ShopStates {}
 
 class ShopLoadingGetProfileState extends ShopStates {}
 
+class ShopSuccessUpdateProfileState extends ShopStates {
+  LoginResponse userResponse;
+
+  ShopSuccessUpdateProfileState(this.userResponse);
+}
+
+class ShopErrorUpdateProfileState extends ShopStates {}
+
+class ShopLoadingUpdateProfileState extends ShopStates {}
+
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit(ShopStates initialState) : super(initialState);
 
@@ -188,6 +198,33 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopSuccessGetProfileState(userResponse!));
     }).catchError((onError) {
       emit(ShopErrorGetProfileState());
+    });
+  }
+
+  void updateUserData({
+    required String name,
+    required String phone,
+    required String email,
+    String? password,
+
+  }) {
+    emit(ShopLoadingUpdateProfileState());
+    DioHelper.putData(
+      endpoint: UPDATE_PROFILE,
+      token: token,
+      body: {
+        'name': name,
+        'phone': phone,
+        'email': email,
+        'password': password,
+      },
+    ).then((value) {
+      userResponse = LoginResponse.fromJson(value.data);
+      print(value.data!);
+      emit(ShopSuccessUpdateProfileState(userResponse!));
+    }).catchError((onError) {
+      print(onError.toString());
+      emit(ShopErrorUpdateProfileState());
     });
   }
 }

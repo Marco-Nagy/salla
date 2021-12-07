@@ -5,14 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla_shop_app/cubit/shop_cubit.dart';
 import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/modules/authentecation/login_screen.dart';
-import 'package:salla_shop_app/modules/shop_layout.dart';
-
 import '../Components.dart';
 
 class SettingsScreen extends StatelessWidget {
-
-   const SettingsScreen({Key? key}) : super(key: key);
-
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +20,25 @@ class SettingsScreen extends StatelessWidget {
     var phoneNumberController = TextEditingController();
     var formKye = GlobalKey<FormState>();
     return BlocConsumer<ShopCubit, ShopStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is ShopSuccessUpdateProfileState) {
+          if (state.userResponse.status == true) {
+            print(state.userResponse.message);
+            print(state.userResponse.data!.token);
+
+            showToast(message: state.userResponse.message.toString());
+          } else {
+            print(state.userResponse.message);
+            showToast(message: state.userResponse.message.toString());
+          }
+        }
+      },
       builder: (context, state) {
         emailController.text = cubit!.data!.email!;
         userNameController.text = cubit.data!.name!;
         phoneNumberController.text = cubit.data!.phone!;
         return ConditionalBuilder(
-          condition:  ShopCubit.get(context).userResponse != null,
+          condition: ShopCubit.get(context).userResponse != null,
           builder: (context) => Container(
             margin: EdgeInsets.all(15),
             width: double.infinity,
@@ -42,6 +50,11 @@ class SettingsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if(state is ShopLoadingUpdateProfileState)
+                      LinearProgressIndicator(),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Text(
                       "EDIT PROFILE",
                       style: TextStyle(
@@ -49,7 +62,6 @@ class SettingsScreen extends StatelessWidget {
                           fontSize: 33,
                           fontWeight: FontWeight.w900),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -59,8 +71,7 @@ class SettingsScreen extends StatelessWidget {
                         validator: (value) => emailValidator(value),
                         label: "Email Address",
                         prefixIcon: Icons.mail,
-                        inputAction: TextInputAction.next
-                    ),
+                        inputAction: TextInputAction.next),
                     SizedBox(
                       height: 10,
                     ),
@@ -70,8 +81,7 @@ class SettingsScreen extends StatelessWidget {
                         validator: (value) => userNameValidator(value),
                         label: "User Name",
                         prefixIcon: Icons.person_rounded,
-                        inputAction: TextInputAction.next
-                    ),
+                        inputAction: TextInputAction.next),
                     SizedBox(
                       height: 10,
                     ),
@@ -81,15 +91,21 @@ class SettingsScreen extends StatelessWidget {
                         validator: (value) => phoneValidator(value),
                         label: "Phone No",
                         prefixIcon: Icons.phone,
-                        inputAction: TextInputAction.next
-                    ),
+                        inputAction: TextInputAction.next),
                     SizedBox(
                       height: 10,
                     ),
-
                     defaultButton(
                       text: "UPDATE",
-                      function: () {},
+                      function: () {
+                        if (formKye.currentState!.validate()) {
+                          ShopCubit.get(context).updateUserData(
+                            name: userNameController.text,
+                            phone: phoneNumberController.text,
+                            email: emailController.text,
+                          );
+                        }
+                      },
                     ),
                     SizedBox(
                       height: 10,
@@ -97,9 +113,8 @@ class SettingsScreen extends StatelessWidget {
                     defaultButton(
                       text: "LOGOUT",
                       function: () {
-                        MyShared.clearData('token').then((value) =>
-                            navigateTo(context, LoginScreen())
-                        );
+                        MyShared.clearData('token').then(
+                            (value) => navigateTo(context, LoginScreen()));
                       },
                     ),
                   ],
@@ -112,18 +127,20 @@ class SettingsScreen extends StatelessWidget {
       },
     );
   }
+
   emailValidator(String? value) {
     if (value!.isEmpty) {
       return "please Enter Email";
     }
     bool emailValid = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value);
     if (!emailValid) {
       return "email not valid";
     }
     return null;
   }
+
   phoneValidator(String? value) {
     if (value!.isEmpty) {
       return "please Enter Phone Number";
@@ -132,11 +149,11 @@ class SettingsScreen extends StatelessWidget {
     RegExp regExp = new RegExp(pattern);
     if (value.length == 0) {
       return 'Please enter mobile number';
-    }
-    else if (!regExp.hasMatch(value)) {
+    } else if (!regExp.hasMatch(value)) {
       return 'Please enter valid mobile number';
     }
   }
+
   userNameValidator(String? value) {
     if (value!.isEmpty) {
       return "please Enter User Name";

@@ -42,5 +42,20 @@ class DioHelper {
    //postResponse = response.data['message'];
     return response;
   }
+  static Future<Response> putData({
+    required String endpoint,
+    Map<String, dynamic>? query,
+    required Map<String, dynamic> body,
+    String lang = 'en',
+    String token = "",
+  }) async {
+    dio.options.headers = {
+      'lang' : lang,
+      'Authorization': token
+    } ;
+    var response = await dio.put(endpoint,data: body);
+    //postResponse = response.data['message'];
+    return response;
+  }
 
 }
