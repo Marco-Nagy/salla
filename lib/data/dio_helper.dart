@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class DioHelper {
   static late Dio dio;
-  static var postResponse ;
+
   static init() {
     dio = Dio(BaseOptions(
         baseUrl: 'https://student.valuxapps.com/api/',
@@ -54,7 +54,7 @@ class DioHelper {
       'Authorization': token
     } ;
     var response = await dio.put(endpoint,data: body);
-    //postResponse = response.data['message'];
+
     return response;
   }
 

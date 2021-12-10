@@ -8,6 +8,7 @@ import 'package:salla_shop_app/models/favorite_change_response.dart';
 import 'package:salla_shop_app/models/favorite_get_response.dart';
 import 'package:salla_shop_app/models/home_response.dart';
 import 'package:salla_shop_app/models/login_response.dart';
+import 'package:salla_shop_app/models/search_response.dart';
 import 'package:salla_shop_app/modules/categories_screen.dart';
 import 'package:salla_shop_app/modules/favorites_screen.dart';
 import 'package:salla_shop_app/modules/home_screen.dart';
@@ -66,6 +67,21 @@ class ShopSuccessUpdateProfileState extends ShopStates {
 class ShopErrorUpdateProfileState extends ShopStates {}
 
 class ShopLoadingUpdateProfileState extends ShopStates {}
+
+
+class SearchLoadingState extends ShopStates {}
+
+class SearchSuccessState extends ShopStates {
+  SearchResponse searchResponse;
+
+  SearchSuccessState(this.searchResponse);
+}
+
+class SearchErrorState extends ShopStates {
+  final String error;
+
+  SearchErrorState(this.error);
+}
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit(ShopStates initialState) : super(initialState);
@@ -227,4 +243,24 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorUpdateProfileState());
     });
   }
+
+
+  SearchResponse? searchResponse;
+  void search(String text) {
+    emit(SearchLoadingState());
+    DioHelper.postData(
+      endpoint: SEARCH,
+      body: {
+        'text':text,
+      },
+      token: token,
+    ).then((value){
+      print(value);
+      emit(SearchSuccessState(searchResponse!));
+    }).catchError((error){
+      print(onError);
+      emit(SearchErrorState(error.toString()));
+    });
+  }
+
 }

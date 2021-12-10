@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 Widget defaultButton({
@@ -36,6 +37,9 @@ Widget defaultTextField(
         required String label,
         required IconData prefixIcon,
         Widget? suffixIcon,
+          ValueChanged? onChange,
+          FormFieldSetter<String>? onSaved,
+        ValueChanged? onFieldSubmitted,
         bool obscureText = false}) =>
     TextFormField(
       controller: controller,
@@ -53,6 +57,7 @@ Widget defaultTextField(
         suffixIcon: suffixIcon,
       ),
       validator: validator,
+      onSaved: onSaved ,
     );
 
 void navigateTo(context, widget) => Navigator.push(
@@ -62,7 +67,6 @@ void navigateTo(context, widget) => Navigator.push(
 
 void showToast({
   required String message,
-
 }) =>
     Fluttertoast.showToast(
       msg: message,
@@ -72,4 +76,10 @@ void showToast({
       backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0,
+    );
+Widget myDivider()=>
+    Divider(
+      color: Colors.white,
+      thickness: 0.3,
+      height: 5,
     );

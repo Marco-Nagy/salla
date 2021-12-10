@@ -1,6 +1,10 @@
-class FavoriteGetResponse {
+class SearchResponse {
+  SearchResponse({
+      this.status, 
+      this.message, 
+      this.data,});
 
-  FavoriteGetResponse.fromJson(dynamic json) {
+  SearchResponse.fromJson(dynamic json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
@@ -17,7 +21,7 @@ class Data {
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {
-        data?.add(FavoriteData.fromJson(v));
+        data?.add(SearchData.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -32,7 +36,7 @@ class Data {
     total = json['total'];
   }
   int? currentPage;
-  List<FavoriteData>? data;
+  List<SearchData>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -47,33 +51,24 @@ class Data {
 
 }
 
-class FavoriteData {
+class SearchData {
 
-  FavoriteData.fromJson(dynamic json) {
-    id = json['id'];
-    product = json['product'] != null ? Product.fromJson(json['product']) : null;
-  }
-  int? id;
-  Product? product;
-
-}
-
-class Product {
-
-  Product.fromJson(dynamic json) {
+  SearchData.fromJson(dynamic json) {
     id = json['id'];
     price = json['price'];
-    oldPrice = json['old_price'];
-    discount = json['discount'];
     image = json['image'];
     name = json['name'];
     description = json['description'];
+    images = json['images'] != null ? json['images'].cast<String>() : [];
+    inFavorites = json['in_favorites'];
+    inCart = json['in_cart'];
   }
   int? id;
-  dynamic price;
-  dynamic oldPrice;
-  dynamic discount;
+  double? price;
   String? image;
   String? name;
   String? description;
+  List<String>? images;
+  bool? inFavorites;
+  bool? inCart;
 }

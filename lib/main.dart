@@ -11,6 +11,7 @@ import 'package:salla_shop_app/syles/themes.dart';
 import 'cubit/app_cubit.dart';
 import 'cubit/bloc_observer.dart';
 import 'cubit/login_cubit.dart';
+import 'cubit/search_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,13 +31,16 @@ class MyApp extends StatelessWidget {
           create: (context) => AppCubit(),
         ),
         BlocProvider(
-          create: (context) => ShopCubit(ShopInitialState())..getUserData(),
+          create: (context) => ShopCubit(ShopInitialState()),
         ),
         BlocProvider(
           create: (context) => LoginCubit(),
         ),
         BlocProvider(
           create: (context) => RegisterCubit(),
+        ),
+        BlocProvider(
+          create: (context) => SearchCubit(),
         ),
       ],
       child: BlocConsumer<AppCubit, AppState>(
