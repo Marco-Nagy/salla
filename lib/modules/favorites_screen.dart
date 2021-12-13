@@ -16,7 +16,7 @@ class FavoritesScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: state is! ShopLoadingGetFavoritesState,
+          condition: ShopCubit.get(context).favoritesGetResponse != null && state is ShopSuccessGetFavoritesState,
           builder: (context) => ListView.separated(
             itemBuilder: (context, index) =>
                 buildFavoriteProduct(cubit[index], context),

@@ -69,19 +69,19 @@ class ShopErrorUpdateProfileState extends ShopStates {}
 class ShopLoadingUpdateProfileState extends ShopStates {}
 
 
-class SearchLoadingState extends ShopStates {}
-
-class SearchSuccessState extends ShopStates {
-  SearchResponse searchResponse;
-
-  SearchSuccessState(this.searchResponse);
-}
-
-class SearchErrorState extends ShopStates {
-  final String error;
-
-  SearchErrorState(this.error);
-}
+// class SearchLoadingState extends ShopStates {}
+//
+// class SearchSuccessState extends ShopStates {
+//   SearchResponse searchResponse;
+//
+//   SearchSuccessState(this.searchResponse);
+// }
+//
+// class SearchErrorState extends ShopStates {
+//   final String error;
+//
+//   SearchErrorState(this.error);
+// }
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit(ShopStates initialState) : super(initialState);
@@ -245,22 +245,22 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
 
-  SearchResponse? searchResponse;
-  void search(String text) {
-    emit(SearchLoadingState());
-    DioHelper.postData(
-      endpoint: SEARCH,
-      body: {
-        'text':text,
-      },
-      token: token,
-    ).then((value){
-      print(value);
-      emit(SearchSuccessState(searchResponse!));
-    }).catchError((error){
-      print(onError);
-      emit(SearchErrorState(error.toString()));
-    });
-  }
+  // SearchResponse? searchResponse;
+  // void search(String text) {
+  //   emit(SearchLoadingState());
+  //   DioHelper.postData(
+  //     endpoint: SEARCH,
+  //     body: {
+  //       'text':text,
+  //     },
+  //     token: token,
+  //   ).then((value){
+  //     print(value);
+  //     emit(SearchSuccessState(searchResponse!));
+  //   }).catchError((error){
+  //     print(onError);
+  //     emit(SearchErrorState(error.toString()));
+  //   });
+  // }
 
 }

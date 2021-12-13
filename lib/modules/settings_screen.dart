@@ -38,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
         userNameController.text = cubit.data!.name!;
         phoneNumberController.text = cubit.data!.phone!;
         return ConditionalBuilder(
-          condition: ShopCubit.get(context).userResponse != null&& state is ShopSuccessGetProfileState,
+          condition: ShopCubit.get(context).userResponse != null && state is ShopSuccessGetProfileState && state is ! ShopLoadingGetProfileState,
           builder: (context) => Container(
             margin: EdgeInsets.all(15),
             width: double.infinity,

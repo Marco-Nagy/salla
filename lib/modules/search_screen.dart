@@ -11,72 +11,74 @@ class SearchScreen extends StatelessWidget {
   var searchController = TextEditingController();
   var formKye =GlobalKey<FormState>();
 
-
-
   @override
   Widget build(BuildContext context) {
-    ShopCubit.get(context).search(searchController.text);
-    return  BlocConsumer<ShopCubit,ShopStates>(
-      listener: (context, state) {
-        // if (state is SearchSuccessState) {
-        //   if (state.searchResponse.status == true) {
-        //     print(state.searchResponse.status);
-        //     print(state.searchResponse.data!.data);
-        //     showToast(message: state.searchResponse.status.toString());
-        //   } else {
-        //     print(state.searchResponse.status);
-        //     showToast(message: state.searchResponse.status.toString());
-        //   }
-        // }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(),
-          body: Form(
-            child: Column(
-              key: formKye,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: defaultTextField(
-                    controller: searchController,
-                    type: TextInputType.text,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "Search must not be Empty";
-                      }
-                      return null;
-                    },
-                    onChange: (value) {
-                      ShopCubit.get(context).search(value);
-                    },
-                    label: 'Search',
-                    prefixIcon: Icons.search,
-                    inputAction: TextInputAction.search,
-                  ),
-                ),
-                Divider(
-                  color: Colors.white,
-                  thickness: 0.5,
-                  height: 10,
-                ),
-                if (state is SearchLoadingState)
-                  LinearProgressIndicator(),
-                if (state is SearchSuccessState)
 
-                  Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context, index) =>
-                          buildSearchProduct(ShopCubit.get(context).searchResponse!.data!.data![index], context),
-                      separatorBuilder: (context, index) => myDivider(),
-                      itemCount: ShopCubit.get(context).searchResponse!.data!.data!.length,
+    return  BlocProvider(
+      create: (BuildContext context) =>SearchCubit(),
+      child: BlocConsumer<SearchCubit,SearchStates>(
+        listener: (context, state) {
+          if (state is SearchSuccessState) {
+            if (state.searchResponse.status == true) {
+              print(state.searchResponse.status);
+              //print(state.searchResponse.data!.data);
+              showToast(message: state.searchResponse.status.toString());
+            } else {
+              //print(state.searchResponse.status);
+              showToast(message: state.searchResponse.status.toString());
+            }
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: Form(
+              child: Column(
+                key: formKye,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: defaultTextField(
+                      controller: searchController,
+                      type: TextInputType.text,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Search must not be Empty";
+                        }
+                        return null;
+                      },
+                      onChange: (value) {
+                        print(value);
+                        SearchCubit.get(context).search(value);
+                      },
+                      label: 'Search',
+                      prefixIcon: Icons.search,
+                      inputAction: TextInputAction.search,
                     ),
                   ),
-              ],
+                  Divider(
+                    color: Colors.white,
+                    thickness: 0.5,
+                    height: 10,
+                  ),
+                  if (state is SearchLoadingState)
+                    LinearProgressIndicator(),
+                  if (state is SearchSuccessState && SearchCubit.get(context).searchResponse != null)
+
+                    Expanded(
+                      child: ListView.separated(
+                        itemBuilder: (context, index) =>
+                            buildSearchProduct(SearchCubit.get(context).searchResponse.data!.data[index], context),
+                        separatorBuilder: (context, index) => myDivider(),
+                        itemCount: SearchCubit.get(context).searchResponse.data!.data.length,
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -95,7 +97,7 @@ class SearchScreen extends StatelessWidget {
                   children: [
                     Image(
                       image: NetworkImage(
-                        searchData.image!,
+                        searchData.image,
                       ),
                       width: 120,
                       height: 120,
@@ -123,7 +125,7 @@ class SearchScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      searchData.name!,
+                      searchData.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -170,13 +172,13 @@ class SearchScreen extends StatelessWidget {
                         IconButton(
                             onPressed: () {
                               ShopCubit.get(context)
-                                  .changeFavorites(searchData.id!);
+                                  .changeFavorites(searchData.id);
                             },
                             icon: CircleAvatar(
-                              backgroundColor: ShopCubit.get(context)
-                                      .favorites![searchData.id]!
-                                  ? Colors.blue
-                                  : Colors.grey,
+                              // backgroundColor: ShopCubit.get(context)
+                              //         .favorites![searchData.id]!
+                              //     ? Colors.blue
+                              //     : Colors.grey,
                               radius: 18,
                               child: Icon(
                                 Icons.favorite,

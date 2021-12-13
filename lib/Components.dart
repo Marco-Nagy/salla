@@ -39,7 +39,7 @@ Widget defaultTextField(
         Widget? suffixIcon,
           ValueChanged? onChange,
           FormFieldSetter<String>? onSaved,
-        ValueChanged? onFieldSubmitted,
+        Function? onFieldSubmitted,
         bool obscureText = false}) =>
     TextFormField(
       controller: controller,
@@ -58,6 +58,7 @@ Widget defaultTextField(
       ),
       validator: validator,
       onSaved: onSaved ,
+      onChanged: onChange,
     );
 
 void navigateTo(context, widget) => Navigator.push(
