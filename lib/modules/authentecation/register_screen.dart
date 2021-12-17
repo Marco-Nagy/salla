@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla_shop_app/cubit/register_cubit.dart';
 import 'package:salla_shop_app/data/my_shared.dart';
 import 'package:salla_shop_app/modules/shop_layout.dart';
-
 import '../../Components.dart';
 
 class RegisterScreen extends StatelessWidget {

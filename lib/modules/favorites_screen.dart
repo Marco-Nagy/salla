@@ -11,15 +11,15 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShopCubit.get(context).getFavorites();
-    var cubit = ShopCubit.get(context).favoritesGetResponse!.data!.data!;
+
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: ShopCubit.get(context).favoritesGetResponse != null && state is ShopSuccessGetFavoritesState,
+          condition: ShopCubit.get(context).favoritesGetResponse != null ,
           builder: (context) => ListView.separated(
             itemBuilder: (context, index) =>
-                buildFavoriteProduct(cubit[index], context),
+                buildFavoriteProduct(ShopCubit.get(context).favoritesGetResponse!.data!.data![index], context),
             separatorBuilder: (context, index) => Divider(
               color: Colors.white,
               thickness: 0.3,

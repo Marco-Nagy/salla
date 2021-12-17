@@ -7,7 +7,7 @@ import 'package:salla_shop_app/models/search_response.dart';
 import '../Components.dart';
 
 class SearchScreen extends StatelessWidget {
-   SearchScreen({Key? key}) : super(key: key);
+  SearchScreen({Key? key}) : super(key: key);
   var searchController = TextEditingController();
   var formKye =GlobalKey<FormState>();
 
@@ -63,7 +63,7 @@ class SearchScreen extends StatelessWidget {
                   ),
                   if (state is SearchLoadingState)
                     LinearProgressIndicator(),
-                  if (state is SearchSuccessState && SearchCubit.get(context).searchResponse != null)
+                  if (state is SearchSuccessState)
 
                     Expanded(
                       child: ListView.separated(
@@ -185,7 +185,8 @@ class SearchScreen extends StatelessWidget {
                                 color: Colors.white,
                                 size: 15,
                               ),
-                            ))
+                            ),
+                        ),
                       ],
                     ),
                   ],

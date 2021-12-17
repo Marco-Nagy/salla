@@ -8,37 +8,41 @@ import 'package:salla_shop_app/modules/authentecation/login_screen.dart';
 import '../Components.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
-
+   SettingsScreen({Key? key}) : super(key: key);
+  var emailController = TextEditingController();
+  var userNameController = TextEditingController();
+  var phoneNumberController = TextEditingController();
+  var passwordController = TextEditingController();
+  var formKye = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     ShopCubit.get(context).getUserData();
     var cubit = ShopCubit.get(context).userResponse;
 
-    var emailController = TextEditingController();
-    var userNameController = TextEditingController();
-    var phoneNumberController = TextEditingController();
-    var formKye = GlobalKey<FormState>();
+
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {
         if (state is ShopSuccessUpdateProfileState) {
           if (state.userResponse.status == true) {
+
             print(state.userResponse.message);
             print(state.userResponse.data!.token);
+            print(state.userResponse.data!);
 
-            showToast(message: state.userResponse.message.toString());
-          } else {
-            print(state.userResponse.message);
             showToast(message: state.userResponse.message.toString());
           }
         }
+        else if(state is ShopSuccessGetProfileState){
+          emailController.text = cubit!.data!.email!;
+          userNameController.text = cubit.data!.name!;
+          phoneNumberController.text = cubit.data!.phone!;
+        }
       },
       builder: (context, state) {
-        emailController.text = cubit!.data!.email!;
-        userNameController.text = cubit.data!.name!;
-        phoneNumberController.text = cubit.data!.phone!;
+
+
         return ConditionalBuilder(
-          condition: ShopCubit.get(context).userResponse != null && state is ShopSuccessGetProfileState && state is ! ShopLoadingGetProfileState,
+          condition: state is ShopSuccessGetProfileState,
           builder: (context) => Container(
             margin: EdgeInsets.all(15),
             width: double.infinity,
@@ -95,6 +99,23 @@ class SettingsScreen extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
+                    defaultTextField(
+                      controller: passwordController,
+                      type: TextInputType.text,
+                      obscureText:  ShopCubit.get(context).passwordVisible,
+                      validator: (value) => passwordValidator(value),
+                      label: "password",
+                      prefixIcon: Icons.lock_rounded,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          ShopCubit.get(context).changeRegisterPasswordVisibility();
+                        },
+                        icon: Icon(ShopCubit.get(context).suffix),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     defaultButton(
                       text: "UPDATE",
                       function: () {
@@ -103,6 +124,7 @@ class SettingsScreen extends StatelessWidget {
                             name: userNameController.text,
                             phone: phoneNumberController.text,
                             email: emailController.text,
+                            password: passwordController.text,
                           );
                         }
                       },
@@ -160,4 +182,21 @@ class SettingsScreen extends StatelessWidget {
     }
     return null;
   }
+
+  passwordValidator(value) {
+    if (value!.isEmpty) {
+      return "please Enter Email";
+    }
+    if (value.length < 8) {
+      return " password must be  more 8 characters ";
+    }
+    bool passwordValid =
+    RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+        .hasMatch(value);
+    if (!passwordValid) {
+      return "password not valid";
+    }
+    return null;
+  }
+
 }

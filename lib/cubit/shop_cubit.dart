@@ -8,7 +8,6 @@ import 'package:salla_shop_app/models/favorite_change_response.dart';
 import 'package:salla_shop_app/models/favorite_get_response.dart';
 import 'package:salla_shop_app/models/home_response.dart';
 import 'package:salla_shop_app/models/login_response.dart';
-import 'package:salla_shop_app/models/search_response.dart';
 import 'package:salla_shop_app/modules/categories_screen.dart';
 import 'package:salla_shop_app/modules/favorites_screen.dart';
 import 'package:salla_shop_app/modules/home_screen.dart';
@@ -67,6 +66,7 @@ class ShopSuccessUpdateProfileState extends ShopStates {
 class ShopErrorUpdateProfileState extends ShopStates {}
 
 class ShopLoadingUpdateProfileState extends ShopStates {}
+class UpdatePasswordVisibilityState extends ShopStates {}
 
 
 // class SearchLoadingState extends ShopStates {}
@@ -243,8 +243,17 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorUpdateProfileState());
     });
   }
+  IconData suffix = Icons.visibility_off_outlined;
 
+  bool passwordVisible = true;
 
+  void changeRegisterPasswordVisibility() {
+    passwordVisible = !passwordVisible;
+    suffix = passwordVisible
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
+    emit(UpdatePasswordVisibilityState());
+  }
   // SearchResponse? searchResponse;
   // void search(String text) {
   //   emit(SearchLoadingState());
