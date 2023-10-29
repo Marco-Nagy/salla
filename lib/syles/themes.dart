@@ -5,7 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 ThemeData darkTheme =  ThemeData(
 scaffoldBackgroundColor: HexColor('333739'),
 appBarTheme: AppBarTheme(
-backwardsCompatibility: false,
+// backwardsCompatibility: false,
 systemOverlayStyle: SystemUiOverlayStyle(
 statusBarIconBrightness: Brightness.light,
 statusBarColor: HexColor('333739'),
@@ -52,7 +52,7 @@ color: Colors.amber,
 ThemeData lightTheme =  ThemeData(
   scaffoldBackgroundColor: Colors.white,
   appBarTheme: AppBarTheme(
-    backwardsCompatibility: false,
+    // backwardsCompatibility: false,
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.dark,
       statusBarColor: Colors.white,
