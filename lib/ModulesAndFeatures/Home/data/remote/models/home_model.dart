@@ -1,3 +1,4 @@
+// ignore_for_file: must_be_immutable
 import 'package:equatable/equatable.dart';
 import 'package:salla_shop_app/models/model.dart';
 
