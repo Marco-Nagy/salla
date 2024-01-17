@@ -47,7 +47,7 @@ class ServerFailure extends Failure {
       case 500:
         return ServerFailure("Internal Server error , Please Try later!");
       default:
-        return ServerFailure('Opps There was an Error, Please try again');
+        return ServerFailure('Oops There was an Error, Please try again');
     }
   }
 }
